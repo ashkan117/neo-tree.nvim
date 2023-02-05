@@ -431,9 +431,18 @@ M.focus_node = function(state, id, do_not_focus_window, relative_movement, botto
       vim.api.nvim_set_current_win(state.winid)
     end
 
+    local get_node_col = function()
+      local line = vim.api.nvim_get_current_line()
+      local idx = vim.fn.stridx(line, node.name)
+      return idx
+    end
+
     -- focus the correct line
     linenr = linenr + relative_movement
     local col = 0
+    if require("neo-tree").config.use_hijack_cursor then
+      col = get_node_col()
+    end
     if node.indent then
       col = string.len(node.indent)
     end
